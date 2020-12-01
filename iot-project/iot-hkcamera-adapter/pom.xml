@@ -1,0 +1,251 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.iot</groupId>
+    <artifactId>iot-project</artifactId>
+    <version>0.0.1</version>
+  </parent>
+  <artifactId>iot-hkcamera-adapter</artifactId>
+  <name>iot-hkcamera-adapter</name>
+  
+      <properties>
+        <encoding>UTF-8</encoding>
+        <maven-compiler-plugin-version>3.8.0</maven-compiler-plugin-version>
+        <maven-jar-plugin-version>3.1.0</maven-jar-plugin-version>
+        <maven-source-plugin-version>3.0.1</maven-source-plugin-version>
+        <maven-assembly-plugin-version>3.1.0</maven-assembly-plugin-version>
+        <maven-dependency-plugin-version>3.1.0</maven-dependency-plugin-version>
+        <maven-resources-plugin-version>3.1.0</maven-resources-plugin-version>
+    </properties>
+  
+	<dependencies>
+	    <!-- netty -->
+	    
+		<!-- kafka -->
+		 
+		<!-- redis -->
+		<dependency>
+			<groupId>commons-pool</groupId>
+			<artifactId>commons-pool</artifactId>
+			<version>1.5.6</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-lang3</artifactId>
+		    <version>3.9</version>
+		</dependency>
+		 
+		<!-- drools -->
+		 
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+		</dependency>
+
+		<!-- json -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.49</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.49</version>
+		</dependency>
+
+
+
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+		</dependency>
+
+		<!-- <dependency> <groupId>com.fasterxml.jackson.core</groupId> <artifactId>jackson-databind</artifactId> 
+			<version>2.9.8</version> <scope>test</scope> </dependency> -->
+
+		<dependency>
+			<groupId>net.sf.json-lib</groupId>
+			<artifactId>json-lib</artifactId>
+			<version>2.4</version>
+			<classifier>jdk15</classifier>
+		</dependency>
+
+		<dependency>
+			<groupId>net.sf.json-lib</groupId>
+			<artifactId>json-lib</artifactId>
+			<version>2.4</version>
+			<classifier>jdk15</classifier>
+		</dependency>
+
+		<dependency>
+			<groupId>cn.hutool</groupId>
+			<artifactId>hutool-all</artifactId>
+			<version>4.1.0</version>
+		</dependency>
+ 
+ 
+		 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.iot</groupId>
+			<artifactId>iot-common</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+		
+		<!-- 第三方jar -->
+		<dependency>
+	        <groupId>aa</groupId><!-- 如果提供的包不是通过MAVEN打包的 没有这类信息可以随便填 -->
+	        <artifactId>aa</artifactId> 
+	        <version>1.0</version>
+	        <scope>system</scope>
+	        <systemPath>${basedir}/src/main/resources/lib/examples.jar</systemPath>
+	    </dependency> 
+	    <dependency>
+	        <groupId>bb</groupId>
+	        <artifactId>bb</artifactId>
+	        <version>1.0</version>
+	        <scope>system</scope>
+	        <systemPath>${basedir}/src/main/resources/lib/jna.jar</systemPath>
+	    </dependency> 
+		<dependency>
+		    <groupId>org.apache.httpcomponents</groupId>
+		    <artifactId>httpclient</artifactId>
+		    <version>4.4</version>
+		</dependency> 
+	</dependencies>
+
+    <build>
+        <!-- 生成的项目jar包的名字-->
+        <!--源代码路径-->
+        <sourceDirectory>src/main/java</sourceDirectory>
+
+        <!--maven-resources-plugin 插件打包resource文件时会参考此节点的配置-->
+        <resources>
+            <!--这两个resource节点负责把配置文件拷贝到classes目录下，保证运行时可以找到配置文件-->
+            <resource>
+                <!--开启filter功能，将路径中的属性名替换为对应的属性值-->
+                <filtering>true</filtering>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/application*.yml</include>
+                    <include>**/*.xml</include>
+                    <include>**/*.properties</include>
+                </includes>
+            </resource>
+
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>**/application*.yml</exclude>
+                    <exclude>**/*.xml</exclude>
+                    <exclude>**/*.properties</exclude>
+                </excludes>
+            </resource>
+
+            <!--compile 和 package 时都会使用resource节点的配置-->
+            <!--resource 节点可通过配置将制定目录的文件在打包后拷贝到制定目录-->
+            <!--如果只有这一个resource节点，或者如果把这个resource节点配置在最前面，则会直接把配置文件打包到conf目录classes目录下不会有配置文件，导致IDEA运行时找不到配置文件-->
+            <resource>
+                <directory>src/main/resources</directory>
+                <targetPath>${project.build.directory}/conf</targetPath>
+            </resource>
+             	 
+			<resource>
+			  <directory>src/main/resources/lib</directory>
+			  <targetPath>BOOT-INF/lib/</targetPath>
+			  <includes>
+			    <include>*.jar</include>
+			  </includes>
+			</resource>
+			 
+        </resources>
+
+        <plugins>
+            <!--编译插件-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin-version}</version>
+                <configuration>
+                    <encoding>${encoding}</encoding>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+
+            <!--将项目的源代码的class文件打包到一个jar包-->
+            <!--jar包默认在target目录下-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${maven-jar-plugin-version}</version>
+                <configuration>
+                    <archive>
+                        <!-- 生成的jar中，不要包含pom.xml和pom.properties这两个文件 -->
+                        <addMavenDescriptor>false</addMavenDescriptor>
+                        <manifest>
+                            <!-- 是否要把第三方jar放到manifest的classpath中 -->
+                            <addClasspath>true</addClasspath>
+                            <!-- 生成的manifest中classpath的前缀，因为要把第三方jar放到lib目录下，所以classpath的前缀是lib/ -->
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <!-- 应用的main class -->
+                            <mainClass>com.hzyw.iot.IotHkCameraApplication</mainClass>
+                        </manifest>
+                        <!--将资源文件目录添加到classpath中，打包后运行项目时则会在该目录下加载配置文件-->
+                        <manifestEntries>
+                            <Class-Path>conf/</Class-Path>
+                        </manifestEntries>
+                    </archive>
+                    <!--项目打包为jar包时排除这些文件，如果将配置文件打到jar包，则会优先读取jar包中的配置文件，不会读取conf目录下的配置文件-->
+                    <!--注意这玩意从编译结果目录开始算目录结构-->
+                    <excludes>
+                        <exclude>/*.yaml</exclude>
+                        <exclude>/*.yml</exclude> 
+                    </excludes>
+                </configuration>
+            </plugin>
+
+            <!-- 用于拷贝maven依赖的plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>${maven-dependency-plugin-version}</version>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <!-- 把依赖的所有maven jar包拷贝到lib目录中 -->
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- 用于拷贝resource的plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>${maven-resources-plugin-version}</version>
+            </plugin>
+
+        </plugins>
+
+    </build>
+</project>

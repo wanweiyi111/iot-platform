@@ -1,0 +1,103 @@
+server:
+  port: 8081
+  servlet:
+    context-path: /deviceManager
+spring:
+  application:
+    name: iotdevicemanager
+  redis:
+    #host: 47.106.189.255
+    host: 192.168.3.183
+    #password: 12345678
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+        hbm2ddl:
+          auto: update
+  datasource:
+      url: jdbc:mysql://192.168.3.183:3306/iotdb?useUnicode=true&characterEncoding=UTF-8
+    #jdbc:mysql://localhost:3306/ssm?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowMultiQueries=true
+    #jdbc:mysql://localhost:3306/blog?useUnicode=true&characterEncoding=utf8&autoReconnect=true  #iotDeviceManager
+      username: root
+      password: Hzyw@123
+      driver-class-name: com.mysql.cj.jdbc.Driver
+#      type: com.alibaba.druid.pool.DruidDatasource # 连接池
+#    url: jdbc:h2:~/.h2/device;MVCC=TRUE;AUTO_SERVER=TRUE
+#    driver-class-name: org.h2.Driver
+#    username: sa
+#    password: sa
+  kafka:
+#    bootstrap-servers: 47.106.189.255:9092 #localhost:9092
+    bootstrap-servers: 192.168.3.183:9901,192.168.3.183:9902,192.168.3.183:9903
+    producer:
+      retries: 0
+      batch-size: 16384
+      buffer-memory: 33554432
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+#      properties:
+      linger.ms: 1
+    consumer:
+      enable-auto-commit: false
+      auto-commit-interval: 100ms
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#      properties:
+      session.timeout.ms: 1500
+#  rabbitmq:
+#    template:
+#      receive-timeout:
+mybatis:
+  type-aliases-package: com.hzyw.iot.platform.devicemanager.domain
+  #config-location: classpath:mybatis/mybatis-config.xml
+  mapper-locations: classpath:mybatis/mapper/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 设置打印sql语句
+  logging:
+    file: mysqllog.log # 日志文件位置
+    level:
+      root: info # 日志级别
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://192.168.2.175:8761/eureka/  #http://root:booszy@localhost:8761/eureka
+    enabled: false
+instance:
+  prefer-ip-address: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: ["health","info","beans","mappings","logfile","metrics","env"]
+
+# 分页插件配置
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql
+
+ribbon:
+  restclient:
+    enabled: true
+
+# 配置主题和消费者组
+kafka:
+  topics:
+    group-id: iotplatform1
+    topic-opt: iot_topic_dataAcess_request  #下行控制数据
+    topic-metrx: #上行状态/响应数据
+      - iot_topic_dataAcess
+    topic-aces:  #上行进网/登陆数据
+      - iot_topic_dataAcess_devInfoResponse
+
+auto-revise: true
+
+logging:
+  file: /var/tmp/deploy/iotplatform.log
+  level:
+    com.hzyw.iot.platform: debug
+#  path: /var/tmp/deploy

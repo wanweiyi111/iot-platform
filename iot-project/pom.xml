@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.iot</groupId>
+  <artifactId>iot-project</artifactId>
+  <version>0.0.1</version>
+  <packaging>pom</packaging>
+
+  <name>iot-project</name>
+  <url>http://maven.apache.org</url>
+
+    <parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<!--version>1.5.9.RELEASE</version-->
+		<version>2.1.6.RELEASE</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+        <spring-cloud.version>Greenwich.SR2</spring-cloud.version>
+        <maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
+	</properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>false</optional>
+        </dependency>
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>Greenwich.SR2</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+  <modules>
+    <module>iot-common</module>
+ <module>iot-mqtt-adapter</module>
+ <module>iot-plc-adapter</module> 
+ <module>iot-3rd-adapter</module>
+ <module>iot-etc-adapter</module>
+ <module>iot-3rdGateway-service</module>
+ <module>iot-broadcast-service</module>
+  </modules>
+      <build>
+        <!--spring boot打包的话需要指定一个唯一的入门-->
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                 <configuration>    
+				 <source>${java.version}</source>    
+				 <target>${java.version}</target>    
+				  </configuration> 
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal><!--可以把依赖的包都打包到生成的Jar包中-->
+                        </goals>
+                    </execution>
+                </executions> 
+                 
+            </plugin>
+        </plugins>
+    </build>
+</project>

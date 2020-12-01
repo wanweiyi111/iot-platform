@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: gateway
+server:
+   port: 8087
+  # servlet:
+  #   context-path: /gateway
+eureka:
+  client:
+    service-url:
+      defaultZone: http://root:booszy@localhost:8761/eureka
+instance:
+  prefer-ip-address: true
+  instance-id: ${spring.cloud.client.ipAddress}:${spring.application.name}:${server.port}
+ #instance:
+ #   prefer-ip-address: true
+ #   instance-id: ${spring.application.name}:${spring.cloud.client.ipAddress}:${spring.application.instance_id:${server.port}}
+ #   appname: api_gateway
+
+#ribbon:
+#  UseIPAddrForServer: true
+
+
+zuul:
+  prefix: /hzyw #增加统一的访问前缀
+  #此处添加ignored-services的意义是忽略通过服务名可以访问微服务(添加完成之后不能通过服务名访问微服务)
+  ignored-services:  iotdevicemanager
+  routes:
+    mydept.serviceId: iotdevicemanager
+    mydept.path: /mydept/**
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*" #注意这里*要加引号，暴露全部，也可以只暴露相应endpoint
+  endpoint:
+    routes:
+      enabled: true # 默认为true，可以省略

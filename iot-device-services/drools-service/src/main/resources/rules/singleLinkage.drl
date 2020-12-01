@@ -1,0 +1,67 @@
+package rules;
+import com.hzyw.iot.platform.droolsmanager.domain.RuleResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+//import java.util.List;
+        //$p1: Param(paramKey=="onff",paramValue==1) from $params;
+   		//$p2: Param(paramKey=="level",paramValue>=50) from $params;
+   		// $c: Corporation($scopes:scopes);
+        //  exists (Scope(scope == "P2P") from $scopes);
+        //$map:Map(this['12'] != null)//正确写法
+
+
+rule "singleLinkage1"
+   	when
+   		$r:RuleResult( onoff == 1, level == 90 ,sourceDeviceId == "1010-3f7b3eb6bffe6fb1-2009-ffff-0be7");
+   	then
+   	    $r.getExecuteActionList().add("{\"methodName\": \"set_brightness\",\"targetId\":\"1030-3c474cf77e1a0376-200d-ffff-74a8\",in\": {\"level\":100,\"onoff\":1}}");
+   	    //$r.setTargetDeviceId("1030-3c474cf77e1a0376-200d-ffff-74a8");
+   end
+
+import	com.hzyw.iot.platform.droolsmanager.domain.RuleResult;
+rule "9527"
+		when
+		    $r:RuleResult(onoff == 1, sourceDeviceId == "1010-3f7b3eb6bffe6fb1-2009-ffff-0be7");
+ 		then
+ 		     final Logger logger = LoggerFactory.getLogger("规则id");
+             $r.getExecuteActionList().add("{\"targetId\":\"1010-3f7b3eb6bffe6fb1-2009-ffff-0be7\",\"in\":{\"level\":70,\"onoff\":1},\"methodName\":\"set_onoff\"}");
+             logger.info("参数");
+end
+/*
+rule "singleLinkage2"
+	when
+		$r:RuleResult( onoff == 1, level < 80, sourceDeviceId == "1010-3f7b3eb6bffe6fb1-2009-ffff-0be7" );
+	then
+	    $r.setExecuteActionName("{\"method\": \"set_onoff\",\"in\": [{\"onoff\":1},{\"level\":80}]}");
+	    //$r.setOutSwitch(1);
+	    $r.setTargetDeviceId("1030-3c474cf77e1a0376-200d-ffff-74a8");
+end
+
+rule "singleLinkage3"
+   	when
+   		$r:RuleResult( inSwitch == -1, inLevel > 80,sourceDeviceId == "1010-3f7b3eb6bffe6fb1-2009-ffff-0be7" );
+   	then
+   	    $r.setExecuteActionName("{\"method\": \"set_brightness\",\"in\": [{\"level\":100}]}");
+   	    //$r.setOutLevel(100);
+   	    $r.setTargetDeviceId("1030-3c474cf77e1a0376-200d-ffff-74a8");
+   end
+
+rule "singleLinkage4"
+   	when
+   		$r:RuleResult( inSwitch == 1, inLevel >= 80 , sourceDeviceId == "1010-3f7b3eb6bffe6fb1-2009-ffff-0be7" );
+   	then
+   	    $r.setExecuteActionName("{\"method\": \"set_onoff\",\"in\": [{\"onoff\":1},{\"level\":100}]}");
+   	    //$r.setOutLevel(100);
+   	    $r.setTargetDeviceId("1030-3c474cf77e1a0376-200d-ffff-74a8");
+   end
+
+/*
+rule "singleLinkage4"
+   	when
+   		$r:RuleResult( triggerActionName == "set_brightness", inLevel <= 80 , sourceDeviceId == "1010-3f7b3eb6bffe6fb1-2009-ffff-0be7" );
+   	then
+   	    $r.setExecuteActionName("set_brightness");
+   	    $r.setOutLevel(80);
+   	    $r.setTargetDeviceId("1030-3c474cf77e1a0376-200d-ffff-74a8");
+   end*/
+

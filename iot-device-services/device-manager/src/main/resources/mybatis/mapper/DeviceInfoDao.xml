@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hzyw.iot.platform.devicemanager.mapper.device.DeviceInfoDao">
+    <resultMap id="deviceInfoMap" type="com.hzyw.iot.platform.devicemanager.domain.device.DeviceInfoDO">
+        <id column="device_id" jdbcType="VARCHAR" property="deviceId"/>
+        <result column="serial_number" jdbcType="VARCHAR" property="serialNumber"/>
+        <result column="device_name" jdbcType="DATE" property="deviceName"/>
+        <result column="device_type" jdbcType="VARCHAR" property="deviceType"/>
+        <result column="type_domain" jdbcType="INTEGER" property="deviceDomain"/>
+        <result column="manufacturer_code" jdbcType="INTEGER" property="manufacturerCode"/>
+        <result column="product_date" jdbcType="DATE" property="productDate" javaType="java.util.Date"/>
+        <result column="expire_date" jdbcType="DATE" property="expireDate" javaType="java.util.Date"/>
+        <result column="batch_number" jdbcType="VARCHAR" property="batchNumber"/>
+        <result column="bar_code" jdbcType="VARCHAR" property="barCode"/>
+        <result column="mac_addr" jdbcType="VARCHAR" property="macAddr"/>
+        <result column="metadata" jdbcType="VARCHAR" property="metadata"/>
+    </resultMap>
+
+    <!--查询设备静态信息-->
+    <select id="getDeviceInfoByID" resultMap="deviceInfoMap" parameterType="java.lang.String">
+        SELECT device_id,
+               serial_number,
+               device_name,
+               device_type,
+               type_domain,
+               product_date,
+               expire_date,
+               batch_number,
+               bar_code,
+               metadata,
+               mac_addr,
+               manufacturer_code
+        FROM DEVICE_INFO_T
+        where DEVICE_ID = #{deviceId}
+    </select>
+
+    <!--查询设备静态信息-->
+    <select id="getDeviceInfoBySN" resultMap="deviceInfoMap">
+        SELECT device_id,
+               serial_number,
+               device_name,
+               device_type,
+               type_domain,
+               product_date,
+               expire_date,
+               batch_number,
+               bar_code,
+               mac_addr,
+               metadata
+        FROM DEVICE_INFO_T
+        WHERE serial_number = #{serialNumber}
+    </select>
+
+    <!--查询设备静态信息-->
+    <select id="getDeviceInfoByType" resultMap="deviceInfoMap">
+        SELECT
+        device_id, serial_number, device_name, device_type,type_domain,
+        product_date, expire_date,batch_number, bar_code, mac_addr, metadata
+        FROM DEVICE_INFO_T
+        <where>
+            device_type=#{deviceType}
+            <if test="serialNumber!=null and serialNumber!=''">
+                AND serial_number=#{serialNumber}
+            </if>
+        </where>
+    </select>
+
+    <!--    更新设备静态数据   -->
+    <update id="updateDeviceInfo" parameterType="com.hzyw.iot.platform.devicemanager.domain.device.DeviceInfoDO">
+        update DEVICE_INFO_T
+        <set>
+            type_domain=#{deviceDomain},
+            <if test="deviceName!= null">device_name=#{deviceName},</if>
+            <if test="deviceType != null">device_type=#{deviceType},</if>
+            <if test="manufacturerCode != null">manufacturer_code=#{manufacturerCode},</if>
+            <if test="productDate != null">product_date=#{productDate},</if>
+            <if test="expireDate != null">expire_date=#{expireDate},</if>
+            <if test="batchNumber != null">batch_number=#{batchNumber},</if>
+            <if test="barCode != null">bar_code=#{barCode},</if>
+            <if test="macAddr != null">mac_addr=#{macAddr},</if>
+            <if test="metadata != null">metadata=#{metadata}</if>
+        </set>
+        where device_id=#{deviceId}
+    </update>
+
+    <!--   插入设备静态数据-->
+    <insert id="insertDeviceInfo" parameterType="com.hzyw.iot.platform.devicemanager.domain.device.DeviceInfoDO">
+        insert into DEVICE_INFO_T
+        (device_id, serial_number, device_name, device_type, type_domain, manufacturer_code, product_date, expire_date,
+         batch_number, bar_code, metadata)
+        values (#{deviceId}, #{serialNumber}, #{deviceName}, #{deviceType}, #{deviceDomain}, #{manufacturerCode},
+                #{productDate}, #{expireDate}, #{batchNumber}, #{barCode}, #{metadata})
+    </insert>
+
+    <!--   删除设备静态数据-->
+    <delete id="deleteDeviceInfo">
+        delete
+        from DEVICE_INFO_T
+        where DEVICE_ID = #{deviceId}
+    </delete>
+
+    <!--获取设备列表信息-->
+    <select id="getAllDeviceInfo" resultType="com.hzyw.iot.platform.devicemanager.domain.vo.DeviceListVO">
+        SELECT D.DEVICE_ID deviceId,
+        D.DEVICE_NAME deviceName,
+        SUBSTRING_INDEX(D.DEVICE_TYPE,'-',1) deviceType,
+        SUBSTRING_INDEX(D.DEVICE_TYPE,'-',-1) manufacturerCode,
+        M.MANUFACTURER_NAME manufacturerName,
+        A.GATEWAY_ID gatewayId,
+        A.REGISTRATION registration
+        FROM DEVICE_INFO_T D, DEVICE_MANUFACTURER_T M,DEVICE_ACCESS_T A
+        WHERE M.MANUFACTURER_CODE=SUBSTRING_INDEX(D.DEVICE_TYPE,'-',-1)
+        AND D.DEVICE_ID=A.DEVICE_ID
+        <if test="deviceId!=null and deviceId!=''">
+            AND D.DEVICE_ID=#{deviceId}
+        </if>
+        <if test="deviceType!=null and deviceType!=''">
+            AND SUBSTRING_INDEX(D.DEVICE_TYPE,'-',1)=#{deviceType}
+        </if>
+        <if test="gatewayId!=null and gatewayId!=''">
+            AND A.GATEWAY_ID=#{gatewayId}
+        </if>
+    </select>
+
+    <!--更新设备SN序列号-->
+    <update id="updateDeviceSN" parameterType="java.lang.String">
+        update DEVICE_INFO_T set SERIAL_NUMBER=#{newSN} where DEVICE_ID=#{deviceId};
+    </update>
+</mapper>

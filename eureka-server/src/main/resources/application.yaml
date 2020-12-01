@@ -1,0 +1,29 @@
+server:
+  port: 8761
+eureka:
+  client:
+    fetch-registry: false
+    register-with-eureka: false
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+  instance:
+    prefer-ip-address: true
+    hostname: localhost
+  server:
+    enable-self-preservation: false # only develop
+
+#spring:
+#  security:
+#    oauth2:
+#      resourceserver:
+#        jwt:
+#          jwk-set-uri:
+#    user:
+#      name: root
+#      password: booszy
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: ["health","info","beans","mappings","logfile","metrics","env"]

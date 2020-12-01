@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hzyw.iot.platform.devicemanager.mapper.device.DeviceAccessDao">
+
+    <resultMap id="DeviceAccessMap" type="com.hzyw.iot.platform.devicemanager.domain.device.DeviceAccessDO">
+        <id column="DEVICE_ID" jdbcType="VARCHAR" property="deviceId"/>
+        <result column="DEVICE_DOMAIN" jdbcType="INTEGER" property="deviceDomain"/>
+        <result column="REGISTRATION" jdbcType="INTEGER" property="registration"/>
+        <result column="PROTOCOL" jdbcType="VARCHAR" property="protocol"/>
+        <result column="PROTOCOL_VERSION" jdbcType="VARCHAR" property="protocolVersion"/>
+        <result column="DEVICE_IPV4" jdbcType="VARCHAR" property="deviceIPv4"/>
+        <result column="DEVICE_IPV6" jdbcType="VARCHAR" property="deviceIPv6"/>
+        <result column="DEVICE_PORT" jdbcType="VARCHAR" property="devicePort"/>
+        <result column="LONGITUDE" jdbcType="VARCHAR" property="longitude"/>
+        <result column="LATITUDE" jdbcType="VARCHAR" property="latitude"/>
+        <result column="LOCATION_TYPE" jdbcType="VARCHAR" property="locationType"/>
+        <result column="ACCESS_TIME" jdbcType="TIMESTAMP" property="accessTime" javaType="java.util.Date"/>
+        <result column="LEAVE_TIME" jdbcType="TIMESTAMP" property="leaveTime" javaType="java.util.Date"/>
+        <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" javaType="java.util.Date"/>
+        <result column="GATEWAY_ID" jdbcType="VARCHAR" property="gatewayId"/>
+        <result column="SERIAL _NO" jdbcType="VARCHAR" property="serialNO"/>
+    </resultMap>
+
+    <!--    查询单条接入信息 -->
+    <select id="getDeviceAccess" resultMap="DeviceAccessMap" parameterType="java.lang.String">
+        select device_id, device_domain, registration, protocol, protocol_version, device_ipv4, device_ipv6
+        ,device_port, longitude, latitude, location_type, access_time, leave_time, create_time, gateway_id
+         from DEVICE_ACCESS_T
+         where DEVICE_ID=#{deviceId}
+    </select>
+
+    <!--    修改单条属性-->
+    <update id="updateDeviceAccess" parameterType="com.hzyw.iot.platform.devicemanager.domain.device.DeviceAccessDO">
+        update DEVICE_ACCESS_T
+        <set>
+<!--             <if test="registration!=null">REGISTRATION=#{registration},</if>   -->
+            <if test="protocol!=null">PROTOCOL=#{protocol},</if>
+            <if test="protocolVersion!=null">PROTOCOL_VERSION=#{protocolVersion},</if>
+            <if test="deviceIPv4!=null">DEVICE_IPV4=#{deviceIPv4},</if>
+            <if test="deviceIPv6!=null">DEVICE_IPV6=#{deviceIPv6},</if>
+            <if test="devicePort!=null">DEVICE_PORT=#{devicePort},</if>
+            <if test="longitude!=null">LONGITUDE=#{longitude},</if>
+            <if test="latitude!=null">LATITUDE=#{latitude},</if>
+            <if test="locationType!=null">LOCATION_TYPE=#{locationType},</if>
+<!--             <if test="accessTime!=null">ACCESS_TIME=#{accessTime},</if>  -->
+            <if test="leaveTime!=null">LEAVE_TIME=#{leaveTime},</if>
+            <if test="createTime!=null">CREATE_TIME=#{createTime},</if>
+            <if test="gatewayId!=null">GATEWAY_ID=#{gatewayId}</if>
+        </set>
+        where DEVICE_ID=#{deviceId}
+    </update>
+
+<!--    <delete id="deleteDeviceAccess" parameterType="java.lang.String">-->
+<!--            delete from DEVICE_ACCESS_T where device_id=#{deviceId}-->
+<!--    </delete>-->
+    <select id="findDeviceAccessInfoList" resultMap="DeviceAccessMap">
+        select device_id, device_domain, registration, protocol, protocol_version, device_ipv4, device_ipv6
+        ,device_port, longitude, latitude, location_type, access_time, leave_time, create_time, gateway_id,serial_no
+         from DEVICE_ACCESS_T
+         where DEVICE_DOMAIN = 4101
+    </select>
+
+</mapper>
